@@ -1,0 +1,1 @@
+"""A-share quote page."""

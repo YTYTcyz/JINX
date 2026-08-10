@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>实时股价 · JINX</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="container">
+    <a class="back" href="/">← 返回首页</a>
+    <p class="eyebrow">GETPRICE SKILL</p>
+    <h1>A 股实时股价</h1>
+    <form class="search" method="post">
+      <label for="symbol">股票代码</label>
+      <div class="search-row">
+        <input id="symbol" name="symbol" value="{{ symbol }}" placeholder="例如 600519" required>
+        <button type="submit">查询</button>
+      </div>
+    </form>
+
+    {% if result %}
+      {% if result.ok %}
+        <section class="card quote">
+          <div>
+            <p class="muted">{{ result.data.market }} · {{ result.data.symbol }}</p>
+            <h2>{{ result.data.name or result.data.symbol }}</h2>
+          </div>
+          <strong class="price">{{ result.data.price }}</strong>
+          <dl>
+            <div><dt>涨跌幅</dt><dd>{{ result.data.change_pct }}%</dd></div>
+            <div><dt>今开</dt><dd>{{ result.data.open }}</dd></div>
+            <div><dt>最高</dt><dd>{{ result.data.high }}</dd></div>
+            <div><dt>最低</dt><dd>{{ result.data.low }}</dd></div>
+            <div><dt>昨收</dt><dd>{{ result.data.pre_close }}</dd></div>
+            <div><dt>来源</dt><dd>{{ result.data.source }}</dd></div>
+          </dl>
+          <p class="muted">更新时间：{{ result.data.time or "未知" }}</p>
+        </section>
+      {% else %}
+        <p class="error">查询失败：{{ result.error }}</p>
+      {% endif %}
+    {% endif %}
+
+    <section class="card chart-card" data-symbol="{{ symbol }}">
+      <div class="chart-head">
+        <h2>行情走势</h2>
+        <div class="period-tabs">
+          <button class="period active" data-period="intraday">分时</button>
+          <button class="period" data-period="five_day">五日</button>
+          <button class="period" data-period="daily">日 K</button>
+          <button class="period" data-period="weekly">周 K</button>
+          <button class="period" data-period="monthly">月 K</button>
+        </div>
+      </div>
+      <p id="chart-status" class="muted">正在加载...</p>
+      <div id="kline-chart"></div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="/static/getprice-chart.js"></script>
+</body>
+</html>

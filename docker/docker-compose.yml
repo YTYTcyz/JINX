@@ -1,0 +1,11 @@
+services:
+  jinx:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3788:3788"
+    environment:
+      JINX_QUOTE_PRIMARY: ${JINX_QUOTE_PRIMARY:-eastmoney}
+      JINX_QUOTE_FALLBACK: ${JINX_QUOTE_FALLBACK:-sina,xueqiu}
+    restart: unless-stopped

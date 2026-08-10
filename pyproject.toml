@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jinx"
+version = "0.1.0"
+description = "JINX skill library and tools"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "akshare>=1.14.0",
+  "requests>=2.31.0",
+  "pandas>=2.0.0",
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "jinja2>=3.1.0",
+  "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+tushare = ["tushare>=1.4.0"]
+
+[tool.setuptools.packages.find]
+include = ["store_skill*"]
