@@ -79,28 +79,24 @@ start.sh       本机 Web 启动入口
 
 ## 启动 Web
 
-先安装依赖，然后运行根目录脚本：
+在项目根目录运行：
 
 ```bash
-pip install -r requirements.txt
-./start.sh
+bash start.sh
 ```
 
-打开 <http://localhost:3788>。开发时可启用自动重载：
-
-```bash
-./start.sh --reload
-```
+脚本会构建并在后台启动 Docker 服务，然后输出访问地址
+<http://localhost:3788>。
 
 新增页面时，在 `web/pages/<页面名>/` 放置路由与模板，并在
 `web/app.py` 注册路由。
 
 ## Docker
 
-Docker 会从干净的 Python 3.12 环境安装 `requirements.txt`：
+`start.sh` 内部执行：
 
 ```bash
-docker compose -f docker/docker-compose.yml up --build
+docker compose -f docker/docker-compose.yml up --build -d
 ```
 
 打开 <http://localhost:3788>。停止服务：

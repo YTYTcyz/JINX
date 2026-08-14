@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir --no-deps -e .
 
 EXPOSE 3788
 
-CMD ["./start.sh"]
+CMD ["python", "-m", "uvicorn", "web.app:app", "--host", "0.0.0.0", "--port", "3788"]
