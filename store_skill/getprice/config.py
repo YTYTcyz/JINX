@@ -19,7 +19,7 @@ class SourceConfig:
 @dataclass
 class QuoteConfig:
     primary: str = "eastmoney"
-    fallback: list[str] = field(default_factory=lambda: ["sina", "xueqiu"])
+    fallback: list[str] = field(default_factory=lambda: ["sina", "yahoo", "yahoo_alt", "xueqiu"])
     timeout_sec: float = 10.0
     sources: dict[str, SourceConfig] = field(default_factory=dict)
 
@@ -29,6 +29,8 @@ class QuoteConfig:
             "sina": SourceConfig(enabled=True, referer=DEFAULT_REFERER),
             "xueqiu": SourceConfig(enabled=True),
             "tushare": SourceConfig(enabled=False),
+            "yahoo": SourceConfig(enabled=True),
+            "yahoo_alt": SourceConfig(enabled=True),
         }
         merged: dict[str, SourceConfig] = {}
         for name, default in defaults.items():
@@ -46,6 +48,12 @@ class QuoteConfig:
                 )
             else:
                 merged[name] = default
+        for name, user in self.sources.items():
+            if name not in merged:
+                if isinstance(user, SourceConfig):
+                    merged[name] = user
+                elif isinstance(user, dict):
+                    merged[name] = SourceConfig(**user)
         self.sources = merged
 
     def source_chain(self) -> list[str]:

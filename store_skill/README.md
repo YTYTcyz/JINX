@@ -6,7 +6,7 @@
 
 ### getprice
 
-获取 A 股近实时价格，支持东财、新浪、雪球和可选 Tushare，并可配置主源及回退顺序。
+获取 A 股、港股、美股近实时价格，支持东财、新浪、Yahoo、雪球和可选 Tushare，并可配置主源及回退顺序。
 
 ```python
 from store_skill.getprice import get_quote, get_quotes
@@ -28,6 +28,22 @@ get_kline("600519", period="daily")
 ```
 
 详细说明：[getkline/SKILL.md](getkline/SKILL.md)
+
+### etfline
+
+获取东财/同花顺/新浪行业与概念板块；东财为约 1 分钟资金线，同花顺为本服务交易时段后台积累的真实 5 分钟快照，新浪仅约 5 分钟行情且无可靠主力净流入；另提供上证指数、科创综指、科创50真实分时点位（东财优先、新浪回退）。
+
+```python
+from store_skill.etfline import list_sectors, get_sector_lines, get_market_lines
+
+list_sectors("industry", source="auto")
+get_sector_lines(["BK0475"])
+get_market_lines()
+```
+
+详细说明：[etfline/SKILL.md](etfline/SKILL.md)
+
+免费公共数据可能延迟、限流或改版。FastAPI 后台采样不依赖浏览器，Docker 缓存使用持久卷；同花顺只能从服务启动后积累实际快照，不还原历史。不同平台分类、口径和代码不可混接。
 
 ## Agent Skill
 

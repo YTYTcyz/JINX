@@ -50,6 +50,8 @@
 python -m compileall -q store_skill web
 python -m store_skill.test.test_getprice
 python -m store_skill.test.test_getkline
+python -m store_skill.test.test_etfline
+python -m store_skill.test.test_etfline_sampler
 docker compose -f docker/docker-compose.yml up --build -d
 ```
 

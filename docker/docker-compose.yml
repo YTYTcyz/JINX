@@ -8,4 +8,10 @@ services:
     environment:
       JINX_QUOTE_PRIMARY: ${JINX_QUOTE_PRIMARY:-eastmoney}
       JINX_QUOTE_FALLBACK: ${JINX_QUOTE_FALLBACK:-sina,xueqiu}
+      JINX_ETFLINE_CACHE_DIR: /var/lib/jinx/etfline
+    volumes:
+      - etfline-cache:/var/lib/jinx/etfline
     restart: unless-stopped
+
+volumes:
+  etfline-cache:
