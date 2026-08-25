@@ -6,6 +6,8 @@ SOURCE_NAMES = {
     "sina": "新浪财经",
     "xueqiu": "雪球",
     "tushare": "Tushare",
+    "yahoo": "Yahoo Finance",
+    "yahoo_alt": "Yahoo Finance（备用）",
 }
 
 ERROR_MESSAGES = (

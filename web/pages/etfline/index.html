@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>今日板块资金流向 · JINX</title>
+  <link rel="stylesheet" href="/static/etfline.css">
+</head>
+<body>
+  <main class="line-shell">
+    <header class="line-header">
+      <div class="title-block"><a href="/">← JINX</a><h1>今日板块资金流向</h1><p id="subtitle">正在获取日期与板块数据…</p></div>
+      <div class="type-switch" role="group" aria-label="板块类型"><button class="type active" data-type="industry">行业</button><button class="type" data-type="concept">概念</button></div>
+    </header>
+
+    <nav class="mode-switch" aria-label="图表模式">
+      <button class="mode active" data-mode="line">资金曲线</button>
+      <button class="mode" data-mode="bubble">资金气泡</button>
+    </nav>
+
+    <section class="toolbar">
+      <label>数据来源<select id="data-source"><option id="auto-source-option" value="auto">自动回退</option><option value="eastmoney">东方财富（分钟）</option><option value="ths">同花顺（5分钟快照）</option><option value="sina">新浪财经（行情快照）</option></select></label>
+      <label>交易日期<input id="line-date" type="date"></label>
+      <label>播放速度<select id="play-speed"><option value="1">1x</option><option value="2">2x</option></select></label>
+      <button id="reload">刷新</button><button id="play">▶ 播放</button><button id="replay">↻ 重播</button>
+    </section>
+    <div id="notice" class="notice" hidden></div>
+    <div id="status" class="status">正在载入板块列表…</div>
+
+    <section class="workspace">
+      <div class="chart-panel"><div id="sector-chart" role="img" aria-label="板块资金流向图"></div></div>
+      <div class="right-rail">
+        <aside class="line-only">
+          <h2>已选版块 <small id="selected-count">0 个</small></h2><div id="selected" class="selected"></div>
+          <div class="selection-heading"><h2>版块选择</h2><div class="selection-actions"><button id="select-filtered" type="button">全选筛选结果</button><button id="invert-filtered" type="button">反选筛选结果</button><button id="clear-all" type="button">一键全不选</button></div></div>
+          <label class="sector-search">搜索版块<input id="sector-search" type="search" placeholder="输入关键词，例如 科创、芯片、银行"></label>
+          <div id="sector-list" class="sector-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="summary" aria-label="资金汇总">
+      <article><span>净流入</span><strong id="inflow" class="pos">--</strong><small id="inflow-count">0 个板块</small></article>
+      <article><span>净流出</span><strong id="outflow" class="neg">--</strong><small id="outflow-count">0 个板块</small></article>
+      <article><span>整体</span><strong id="total">--</strong><small id="current-time">等待数据</small></article>
+    </section>
+
+    <section class="source-notes" aria-labelledby="source-notes-title">
+      <section class="market-panel" aria-labelledby="market-title"><div class="market-heading"><div><h2 id="market-title">指数走势（非资金）</h2><p>仅作点位参考 · 不参与左侧资金曲线</p></div><span id="market-status">等待数据</span></div><div id="market-chart" role="img" aria-label="三大指数相对开盘涨跌幅"></div></section>
+      <div class="source-copy">
+        <h2 id="source-notes-title">数据来源与时间说明</h2>
+        <div>
+          <p><strong>东方财富</strong>约 1 分钟更新；接口可用时可返回当天或近期真实分钟累计资金线。</p>
+          <p><strong>同花顺</strong>上游仅提供当前资金快照；JINX 服务端在交易时段每 5 分钟采样，只能从服务运行后积累，无法还原此前轨迹。</p>
+          <p><strong>新浪财经</strong>约 5 分钟行情快照，不含可靠主力净流入，不能生成资金线或气泡。</p>
+          <p><strong>口径提示</strong>各平台板块分类、资金口径和更新时间不同，数字不可直接混接成一条线；自动回退会整套切换来源与板块代码。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="/static/etfline.js"></script>
+</body>
+</html>

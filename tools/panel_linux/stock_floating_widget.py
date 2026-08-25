@@ -22,6 +22,7 @@ else:
     ROOT_DIR = Path(sys.executable).resolve().parent
 
 from store_skill.getprice import get_quotes  # noqa: E402
+from store_skill.getprice.normalize import normalize_symbol  # noqa: E402
 
 
 def _resolve_settings_file() -> Path:
@@ -38,7 +39,7 @@ DEFAULT_FG_COLOR = "#000000"
 
 @dataclass
 class UiSettings:
-    symbols_text: str = "600519,000001,000858"
+    symbols_text: str = "600519,000001,000858,HK:00700,US:AAPL"
     refresh_sec: float = 5.0
     width: int = 320
     height: int = 180
@@ -195,7 +196,7 @@ class StockFloatingWidgetApp:
         self.alpha_text_var = tk.StringVar(value=f"{self.alpha_var.get():.2f}")
         self.auto_height_var = tk.BooleanVar(value=bool(self.settings.auto_fit_height))
 
-        ttk.Label(frame, text="股票代码（逗号/空格分隔）").grid(row=0, column=0, sticky="w")
+        ttk.Label(frame, text="股票代码（逗号/空格分隔；A股 600519，港股 HK:00700，美股 US:AAPL）").grid(row=0, column=0, sticky="w")
         ttk.Entry(frame, textvariable=self.symbols_var).grid(
             row=1, column=0, columnspan=7, sticky="ew", pady=(6, 12), ipady=1
         )
@@ -682,6 +683,14 @@ class StockFloatingWidgetApp:
         thread = threading.Thread(target=self._fetch_quotes_worker, args=(symbols,), daemon=True)
         thread.start()
 
+    @staticmethod
+    def _quote_identity(symbol: str) -> tuple[str, str] | None:
+        try:
+            info = normalize_symbol(symbol)
+        except ValueError:
+            return None
+        return info.market, info.symbol
+
     def _fetch_quotes_worker(self, symbols: list[str]) -> None:
         try:
             result = get_quotes(symbols)
@@ -690,17 +699,19 @@ class StockFloatingWidgetApp:
                 return
             lines: list[tuple[str, float | None]] = []
             rows = result.data or []
-            by_symbol = {str(row.get("symbol")): row for row in rows}
+            by_identity = {(str(row.get("market") or ""), str(row.get("symbol") or "")): row for row in rows}
             for symbol in symbols:
-                row = by_symbol.get(symbol)
+                row = by_identity.get(self._quote_identity(symbol))
                 if not row:
                     lines.append((f"{symbol}  数据缺失", None))
                     continue
                 name = row.get("name") or "-"
                 price = row.get("price")
                 pct = row.get("change_pct")
+                market = str(row.get("market") or "")
                 try:
-                    price_text = f"{float(price):.3f}"
+                    decimals = 3 if market in {"SH", "SZ", "BJ"} else 2
+                    price_text = f"{float(price):.{decimals}f}"
                 except (TypeError, ValueError):
                     price_text = str(price or "-")
                 if isinstance(pct, (int, float)):
@@ -709,7 +720,10 @@ class StockFloatingWidgetApp:
                 else:
                     pct_text = "-"
                     pct_value = None
-                lines.append((f"{symbol} {name}  {price_text}  {pct_text}", pct_value))
+                source = row.get("source") or "-"
+                quote_time = row.get("time")
+                time_text = f"{quote_time}" if quote_time else "时间未知"
+                lines.append((f"{symbol} {name}  {price_text}  {pct_text}  [{source} {time_text}]", pct_value))
             self.result_queue.put((True, lines))
         except Exception as exc:  # noqa: BLE001
             self.result_queue.put((False, str(exc)))
@@ -724,7 +738,7 @@ class StockFloatingWidgetApp:
                 if ok:
                     self.quote_lines = payload
                     self._render_quote_lines(payload)
-                    self.status_var.set("状态：刷新成功")
+                    self.status_var.set("状态：刷新成功（免费源可能延迟）")
                 else:
                     self.status_var.set(f"状态：刷新失败 - {payload}")
         except queue.Empty:
