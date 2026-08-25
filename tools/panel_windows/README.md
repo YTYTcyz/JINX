@@ -29,3 +29,13 @@ Windows 启动入口目录。
 cd /d <你的JINX路径>
 python tools\panel_windows\stock_floating_widget_windows.py
 ```
+
+## 打包成 exe（给无 Python 环境同事）
+
+1. 在项目根目录双击或命令行运行：
+   - `tools\panel_windows\build_panel_windows_exe.bat`
+2. 打包成功后产物在：
+   - `tools\panel_windows\dist\JinxStockPanel.exe`
+3. 把 `JinxStockPanel.exe` 发给同事即可直接运行（无需预装 Python）
+
+> 说明：exe 启动后会在 exe 同目录生成 `.stock_floating_widget_settings.json` 用于保存界面设置。

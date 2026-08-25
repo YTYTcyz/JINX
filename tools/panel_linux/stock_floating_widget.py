@@ -14,14 +14,24 @@ from tkinter import font as tkfont
 from tkinter import colorchooser, messagebox, ttk
 
 
-ROOT_DIR = Path(__file__).resolve().parents[2]
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
+if not getattr(sys, "frozen", False):
+    ROOT_DIR = Path(__file__).resolve().parents[2]
+    if str(ROOT_DIR) not in sys.path:
+        sys.path.insert(0, str(ROOT_DIR))
+else:
+    ROOT_DIR = Path(sys.executable).resolve().parent
 
 from store_skill.getprice import get_quotes  # noqa: E402
 
 
-SETTINGS_FILE = Path(__file__).with_name(".stock_floating_widget_settings.json")
+def _resolve_settings_file() -> Path:
+    if getattr(sys, "frozen", False):
+        # 打包为 exe 后保存到 exe 所在目录，避免落在临时解压目录导致设置丢失。
+        return Path(sys.executable).resolve().with_name(".stock_floating_widget_settings.json")
+    return Path(__file__).with_name(".stock_floating_widget_settings.json")
+
+
+SETTINGS_FILE = _resolve_settings_file()
 DEFAULT_BG_COLOR = "#37FFFF"
 DEFAULT_FG_COLOR = "#000000"
 
