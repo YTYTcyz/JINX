@@ -27,7 +27,6 @@
 ## 3. Agent Skill
 
 - Agent Skill 的维护源放在 `store_skill/agent_skill/`。
-- `.cursor/skills/` 只作为 Cursor 自动发现入口，指向维护源。
 - Agent 不得编造缺失数据；调用失败时必须如实报告。
 - Agent Skill 中引用的命令必须实际运行验证。
 

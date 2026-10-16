@@ -53,8 +53,7 @@ Agent Skill 的维护源位于：
 store_skill/agent_skill/a-share-analysis/
 ```
 
-`.cursor/skills/a-share-analysis/` 是 Cursor 自动发现入口。修改 Agent
-能力时只维护 `store_skill/agent_skill/` 中的源文件。
+修改 Agent 能力时只维护 `store_skill/agent_skill/` 中的源文件。
 
 ## 新增能力约定
 

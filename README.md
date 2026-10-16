@@ -4,8 +4,7 @@
 完整能力目录见 [`store_skill/README.md`](store_skill/README.md)。
 
 Agent Skill 的维护源位于
-`store_skill/agent_skill/a-share-analysis/`；`.cursor/skills/` 是
-Cursor 自动发现入口。项目维护规范见 [`VIBE_REQUIREMENTS.md`](VIBE_REQUIREMENTS.md)。
+`store_skill/agent_skill/a-share-analysis/`。项目维护规范见 [`VIBE_REQUIREMENTS.md`](VIBE_REQUIREMENTS.md)。
 
 ## 安装
 
